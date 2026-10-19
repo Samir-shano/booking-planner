@@ -65,6 +65,38 @@ async function main() {
   rl.close()
 }
 
+/**
+ * Creates a booking on a Swedish workday.
+ */
+async function createBooking() {
+  const date = (await rl.question('Enter date (YYYY-MM-DD): ')).trim()
+  const startTime = (await rl.question('Enter start time (HH:MM): ')).trim()
+  const duration = Number(await rl.question('Enter duration (minutes): '))
+
+  try {
+    // Check whether the date is a Swedish workday.
+    const year = Number(date.slice(0, 4))
+    const holidayCalendar = year === new Date().getFullYear()
+      ? calendar
+      : new HolidayCalendar(year)
+
+    if (!holidayCalendar.isWorkday(date)) {
+      console.log('Bookings are only allowed on Swedish workdays.')
+      return
+    }
+
+    // Create the booking using BookingScheduler.
+    scheduler.addBooking(date, startTime, duration)
+
+    const bookings = scheduler.getBookings()
+    const booking = bookings[bookings.length - 1]
+
+    console.log(`Booking created successfully! ID: ${booking.id}`)
+  } catch (error) {
+    console.log(`Booking failed: ${error.message}`)
+  }
+}
+
 
 main().catch(error => {
   console.error(error.message)
