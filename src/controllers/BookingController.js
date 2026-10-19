@@ -78,6 +78,10 @@ export class BookingController {
             await this.cancelBooking()
             break
 
+          case '4':
+            await this.rescheduleBooking()
+            break
+
           case '0':
             running = false
             this.view.showMessage('Goodbye!')
@@ -92,4 +96,23 @@ export class BookingController {
     }
   }
 
-}
+
+  /**
+   * Reschedules an existing booking.
+   */
+  async rescheduleBooking() {
+    const id = Number(await this.view.ask('Enter booking ID: '))
+
+    if (!Number.isInteger(id) || id <= 0) {
+      this.view.showMessage('Invalid booking ID.')
+      return
+    }
+
+    const date = await this.view.ask('Enter new date (YYYY-MM-DD): ')
+    const startTime = await this.view.ask('Enter new start time (HH:MM): ')
+    const duration = Number(
+      await this.view.ask('Enter new duration (minutes): ')
+    )
+
+  }
+} 
