@@ -38,6 +38,34 @@ function showMenu() {
   console.log('0. Exit')
 }
 
+/**
+ * Starts the interactive application.
+ */
+async function main() {
+  let running = true
+
+  while (running) {
+    showMenu()
+
+    const choice = await rl.question('\nChoose an option: ')
+
+    switch (choice.trim()) {
+      case '1':
+        await createBooking()
+        break
+      case '0':
+        running = false
+        console.log('Goodbye!')
+        break
+      default:
+        console.log('This feature is not implemented yet.')
+    }
+  }
+
+  rl.close()
+}
+
+
 main().catch(error => {
   console.error(error.message)
   rl.close()
