@@ -53,10 +53,16 @@ async function main() {
       case '1':
         await createBooking()
         break
+
+      case '2':
+        viewBookings()
+        break
+
       case '0':
         running = false
         console.log('Goodbye!')
         break
+
       default:
         console.log('This feature is not implemented yet.')
     }
@@ -97,6 +103,27 @@ async function createBooking() {
   }
 }
 
+/**
+ * Displays all existing bookings.
+ */
+function viewBookings() {
+  const bookings = scheduler.getBookings()
+
+  if (bookings.length === 0) {
+    console.log('No bookings found.')
+    return
+  }
+
+  console.log('\n=== Your Bookings ===')
+
+  for (const booking of bookings) {
+    console.log(`ID: ${booking.id}`)
+    console.log(`Date: ${booking.date}`)
+    console.log(`Start time: ${booking.startTime}`)
+    console.log(`Duration: ${booking.duration} minutes`)
+    console.log('------------------------')
+  }
+}
 
 main().catch(error => {
   console.error(error.message)
