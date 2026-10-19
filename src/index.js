@@ -1,27 +1,10 @@
 
 import { BookingModel } from './models/BookingModel.js'
-import { createInterface } from 'node:readline/promises'
-import { stdin as input, stdout as output } from 'node:process'
+import { BookingView } from './views/BookingView.js'
 
-// Initialize the booking model.
+// Initialize the model and view.
 const bookingModel = new BookingModel()
-
-// Create an interface for terminal input.
-const rl = createInterface({ input, output })
-
-/**
- * Displays the main menu.
- */
-function showMenu() {
-  console.log('\n=== Booking Planner ===')
-  console.log('1. Create booking')
-  console.log('2. View bookings')
-  console.log('3. Cancel booking')
-  console.log('4. Reschedule booking')
-  console.log('5. View available slots')
-  console.log('6. Check workday')
-  console.log('0. Exit')
-}
+const bookingView = new BookingView()
 
 /**
  * Starts the interactive application.
@@ -29,94 +12,81 @@ function showMenu() {
 async function main() {
   let running = true
 
-  while (running) {
-    showMenu()
+  try {
+    while (running) {
+      bookingView.showMenu()
 
-    const choice = await rl.question('\nChoose an option: ')
+      const choice = await bookingView.ask('\nChoose an option: ')
 
-    switch (choice.trim()) {
-      case '1':
-        await createBooking()
-        break
+      switch (choice) {
+        case '1':
+          await createBooking()
+          break
 
-      case '2':
-        viewBookings()
-        break
+        case '2':
+          bookingView.showBookings(bookingModel.getBookings())
+          break
 
-      case '3':
-        await cancelBooking()
-        break
+        case '3':
+          await cancelBooking()
+          break
 
-      case '0':
-        running = false
-        console.log('Goodbye!')
-        break
+        case '0':
+          running = false
+          bookingView.showMessage('Goodbye!')
+          break
 
-      default:
-        console.log('This feature is not implemented yet.')
+        default:
+          bookingView.showMessage('This feature is not implemented yet.')
+      }
     }
+  } finally {
+    bookingView.close()
   }
-
-  rl.close()
 }
 
 /**
  * Creates a booking on a Swedish workday.
  */
 async function createBooking() {
-  const date = (await rl.question('Enter date (YYYY-MM-DD): ')).trim()
-  const startTime = (await rl.question('Enter start time (HH:MM): ')).trim()
-  const duration = Number(await rl.question('Enter duration (minutes): '))
+  const date = await bookingView.ask('Enter date (YYYY-MM-DD): ')
+  const startTime = await bookingView.ask('Enter start time (HH:MM): ')
+  const duration = Number(
+    await bookingView.ask('Enter duration (minutes): ')
+  )
 
   try {
     const booking = bookingModel.createBooking(date, startTime, duration)
 
-    console.log(`Booking created successfully! ID: ${booking.id}`)
+    bookingView.showMessage(
+      `Booking created successfully! ID: ${booking.id}`
+    )
   } catch (error) {
-    console.log(`Booking failed: ${error.message}`)
+    bookingView.showMessage(`Booking failed: ${error.message}`)
   }
 }
 
 /**
- * Displays all existing bookings.
+ * Cancels an existing booking by its ID.
  */
-function viewBookings() {
-  const bookings = bookingModel.getBookings()
-
-  if (bookings.length === 0) {
-    console.log('No bookings found.')
-    return
-  }
-
-  console.log('\n=== Your Bookings ===')
-
-  for (const booking of bookings) {
-    console.log(`ID: ${booking.id}`)
-    console.log(`Date: ${booking.date}`)
-    console.log(`Start time: ${booking.startTime}`)
-    console.log(`Duration: ${booking.duration} minutes`)
-    console.log('------------------------')
-  }
-}
-
 async function cancelBooking() {
-  const id = Number(await rl.question('Enter booking ID: '))
+  const id = Number(await bookingView.ask('Enter booking ID: '))
 
   if (!Number.isInteger(id) || id <= 0) {
-    console.log('Invalid booking ID.')
+    bookingView.showMessage('Invalid booking ID.')
     return
   }
 
   const cancelled = bookingModel.cancelBooking(id)
 
   if (cancelled) {
-    console.log(`Booking ${id} cancelled successfully!`)
+    bookingView.showMessage(`Booking ${id} cancelled successfully!`)
   } else {
-    console.log(`Booking ${id} was not found.`)
+    bookingView.showMessage(`Booking ${id} was not found.`)
   }
 }
 
 main().catch(error => {
   console.error(error.message)
-  rl.close()
+  process.exitCode = 1
 })
