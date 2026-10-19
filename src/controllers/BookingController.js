@@ -51,4 +51,45 @@ export class BookingController {
       this.view.showMessage(`Booking ${id} was not found.`)
     }
   }
+
+
+  /**
+   * Starts the interactive booking application.
+   */
+  async start() {
+    let running = true
+
+    try {
+      while (running) {
+        this.view.showMenu()
+
+        const choice = await this.view.ask('\nChoose an option: ')
+
+        switch (choice) {
+          case '1':
+            await this.createBooking()
+            break
+
+          case '2':
+            this.view.showBookings(this.model.getBookings())
+            break
+
+          case '3':
+            await this.cancelBooking()
+            break
+
+          case '0':
+            running = false
+            this.view.showMessage('Goodbye!')
+            break
+
+          default:
+            this.view.showMessage('This feature is not implemented yet.')
+        }
+      }
+    } finally {
+      this.view.close()
+    }
+  }
+
 }
