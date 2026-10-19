@@ -1,10 +1,14 @@
 
 import { BookingModel } from './models/BookingModel.js'
 import { BookingView } from './views/BookingView.js'
+import { BookingController } from './controllers/BookingController.js'
 
 // Initialize the model and view.
 const bookingModel = new BookingModel()
 const bookingView = new BookingView()
+
+// Initialize the booking controller.
+const bookingController = new BookingController(bookingModel, bookingView)
 
 /**
  * Starts the interactive application.
@@ -20,7 +24,7 @@ async function main() {
 
       switch (choice) {
         case '1':
-          await createBooking()
+          await bookingController.createBooking()
           break
 
         case '2':
@@ -42,27 +46,6 @@ async function main() {
     }
   } finally {
     bookingView.close()
-  }
-}
-
-/**
- * Creates a booking on a Swedish workday.
- */
-async function createBooking() {
-  const date = await bookingView.ask('Enter date (YYYY-MM-DD): ')
-  const startTime = await bookingView.ask('Enter start time (HH:MM): ')
-  const duration = Number(
-    await bookingView.ask('Enter duration (minutes): ')
-  )
-
-  try {
-    const booking = bookingModel.createBooking(date, startTime, duration)
-
-    bookingView.showMessage(
-      `Booking created successfully! ID: ${booking.id}`
-    )
-  } catch (error) {
-    bookingView.showMessage(`Booking failed: ${error.message}`)
   }
 }
 
