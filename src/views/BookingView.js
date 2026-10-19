@@ -19,4 +19,23 @@ export class BookingView {
     console.log('6. Check workday')
     console.log('0. Exit')
   }
+
+  /**
+ * Asks the user a question.
+ *
+ * @param {string} question - The question to ask.
+ * @returns {Promise<string>} The user's answer.
+ */
+  async ask(question) {
+    return (await this.rl.question(question)).trim()
+  }
+
+  /**
+   * Displays a message.
+   *
+   * @param {string} message - The message to display.
+   */
+  showMessage(message) {
+    console.log(message)
+  }
 }
