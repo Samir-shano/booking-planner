@@ -114,5 +114,21 @@ export class BookingController {
       await this.view.ask('Enter new duration (minutes): ')
     )
 
+    try {
+      const rescheduled = this.model.rescheduleBooking(
+        id,
+        date,
+        startTime,
+        duration
+      )
+
+      if (rescheduled) {
+        this.view.showMessage(`Booking ${id} rescheduled successfully!`)
+      } else {
+        this.view.showMessage(`Booking ${id} was not found.`)
+      }
+    } catch (error) {
+      this.view.showMessage(`Rescheduling failed: ${error.message}`)
+    }
   }
 } 
