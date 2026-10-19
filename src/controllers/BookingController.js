@@ -81,8 +81,8 @@ export class BookingController {
           case '4':
             await this.rescheduleBooking()
             break
-          
-          case '5': 
+
+          case '5':
             await this.viewAvailableSlots()
             break
 
@@ -144,5 +144,22 @@ export class BookingController {
     const duration = Number(
       await this.view.ask('Enter duration (minutes): ')
     )
+
+    try {
+      const slots = this.model.getAvailableSlots(date, duration)
+
+      if (slots.length === 0) {
+        this.view.showMessage('No available slots found.')
+        return
+      }
+
+      this.view.showMessage('\n=== Available Slots ===')
+
+      for (const slot of slots) {
+        this.view.showMessage(String(slot))
+      }
+    } catch (error) {
+      this.view.showMessage(`Failed to get available slots: ${error.message}`)
+    }
   }
 } 
