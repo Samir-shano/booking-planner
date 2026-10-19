@@ -52,5 +52,45 @@ export class BookingModel {
     return bookings[bookings.length - 1]
   }
 
+  /**
+  * Returns all bookings.
+  */
+  getBookings() {
+    return this.scheduler.getBookings()
+  }
+
+
+  /**
+   * Cancels a booking by ID.
+   */
+  cancelBooking(id) {
+    return this.scheduler.cancelBooking(id)
+  }
+
+
+  /**
+   * Reschedules an existing booking.
+   */
+  rescheduleBooking(id, date, startTime, duration) {
+    if (!this.isWorkday(date)) {
+      throw new Error('Bookings are only allowed on Swedish workdays.')
+    }
+
+
+    return this.scheduler.rescheduleBooking(id, date, startTime, duration)
+  }
+
+
+  /**
+   * Returns available booking slots.
+   */
+  getAvailableSlots(date, duration) {
+    if (!this.isWorkday(date)) {
+      return []
+    }
+
+
+    return this.scheduler.getAvailableSlots(date, duration)
+  }
 
 }
