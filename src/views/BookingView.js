@@ -38,4 +38,33 @@ export class BookingView {
   showMessage(message) {
     console.log(message)
   }
+
+  /**
+   * Displays all bookings.
+   *
+   * @param {Array} bookings - The bookings to display.
+   */
+  showBookings(bookings) {
+    if (bookings.length === 0) {
+      this.showMessage('No bookings found.')
+      return
+    }
+
+    this.showMessage('\n=== Your Bookings ===')
+
+    for (const booking of bookings) {
+      this.showMessage(`ID: ${booking.id}`)
+      this.showMessage(`Date: ${booking.date}`)
+      this.showMessage(`Start time: ${booking.startTime}`)
+      this.showMessage(`Duration: ${booking.duration} minutes`)
+      this.showMessage('------------------------')
+    }
+  }
+
+  /**
+   * Closes the terminal interface.
+   */
+  close() {
+    this.rl.close()
+  }
 }
