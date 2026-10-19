@@ -32,7 +32,7 @@ async function main() {
           break
 
         case '3':
-          await cancelBooking()
+          await bookingController.cancelBooking()
           break
 
         case '0':
@@ -46,26 +46,6 @@ async function main() {
     }
   } finally {
     bookingView.close()
-  }
-}
-
-/**
- * Cancels an existing booking by its ID.
- */
-async function cancelBooking() {
-  const id = Number(await bookingView.ask('Enter booking ID: '))
-
-  if (!Number.isInteger(id) || id <= 0) {
-    bookingView.showMessage('Invalid booking ID.')
-    return
-  }
-
-  const cancelled = bookingModel.cancelBooking(id)
-
-  if (cancelled) {
-    bookingView.showMessage(`Booking ${id} cancelled successfully!`)
-  } else {
-    bookingView.showMessage(`Booking ${id} was not found.`)
   }
 }
 

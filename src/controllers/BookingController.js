@@ -31,4 +31,24 @@ export class BookingController {
       this.view.showMessage(`Booking failed: ${error.message}`)
     }
   }
+
+  /**
+ * Cancels an existing booking by its ID.
+ */
+  async cancelBooking() {
+    const id = Number(await this.view.ask('Enter booking ID: '))
+
+    if (!Number.isInteger(id) || id <= 0) {
+      this.view.showMessage('Invalid booking ID.')
+      return
+    }
+
+    const cancelled = this.model.cancelBooking(id)
+
+    if (cancelled) {
+      this.view.showMessage(`Booking ${id} cancelled successfully!`)
+    } else {
+      this.view.showMessage(`Booking ${id} was not found.`)
+    }
+  }
 }
