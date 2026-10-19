@@ -38,4 +38,19 @@ export class BookingModel {
     return calendar.isWorkday(date)
   }
 
+  /**
+   * Creates a booking on a Swedish workday.
+   */
+  createBooking(date, startTime, duration) {
+    if (!this.isWorkday(date)) {
+      throw new Error('Bookings are only allowed on Swedish workdays.')
+    }
+
+    this.scheduler.addBooking(date, startTime, duration)
+
+    const bookings = this.scheduler.getBookings()
+    return bookings[bookings.length - 1]
+  }
+
+
 }
