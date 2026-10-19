@@ -1,0 +1,25 @@
+{
+  "name": "booking-planner",
+  "version": "1.0.0",
+  "description": "A Node.js booking application using Booking Scheduler and Holiday Calendar modules.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samir-shano/booking-planner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Samir-shano/booking-planner/issues"
+  },
+  "homepage": "https://github.com/Samir-shano/booking-planner#readme",
+  "dependencies": {
+    "booking-scheduler": "github:Samir-shano/booking-scheduler",
+    "js-cli-template": "github:ellalovisaj/1dv610-laboration-2"
+  }
+}

@@ -1,0 +1,33 @@
+@startuml
+
+class BookingScheduler {
+  - bookings 
+  + addBooking()
+  + cancelBooking()
+  + rescheduleBooking()
+  + isAvailable()
+  + getAvailableSlots()
+  + getBookings()
+}
+
+class Booking {
+  - date
+  - startTime
+  - duration
+  + getEndTime()
+  - isValidTime()
+  - isValidDuration()
+}
+
+class OpeningHours {
+  - day
+  - openTime
+  - closeTime
+  + isWithinOpeningHours()
+}
+
+BookingScheduler "1" --> "0..*" Booking : manages
+
+BookingScheduler "1" --> "0..*" OpeningHours : uses 
+
+@enduml
