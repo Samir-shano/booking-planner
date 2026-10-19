@@ -81,6 +81,10 @@ export class BookingController {
           case '4':
             await this.rescheduleBooking()
             break
+          
+          case '5': 
+            await this.viewAvailableSlots()
+            break
 
           case '0':
             running = false
@@ -130,5 +134,15 @@ export class BookingController {
     } catch (error) {
       this.view.showMessage(`Rescheduling failed: ${error.message}`)
     }
+  }
+
+  /**
+ * Displays available booking slots for a selected date.
+ */
+  async viewAvailableSlots() {
+    const date = await this.view.ask('Enter date (YYYY-MM-DD): ')
+    const duration = Number(
+      await this.view.ask('Enter duration (minutes): ')
+    )
   }
 } 
