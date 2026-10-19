@@ -23,4 +23,19 @@ export class BookingModel {
     }
   }
 
+  /**
+   * Checks whether a date is a Swedish workday.
+   *
+   * @param {string} date - Date in YYYY-MM-DD format.
+   * @returns {boolean} True if the date is a workday.
+   */
+  isWorkday(date) {
+    const year = Number(date.slice(0, 4))
+    const calendar = year === new Date().getFullYear()
+      ? this.calendar
+      : new HolidayCalendar(year)
+
+    return calendar.isWorkday(date)
+  }
+
 }
