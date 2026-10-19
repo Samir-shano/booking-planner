@@ -1,25 +1,10 @@
 
-import { BookingScheduler } from 'booking-scheduler'
-import { HolidayCalendar } from 'js-cli-template'
+import { BookingModel } from './models/BookingModel.js'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 
-// Initialize the booking and holiday modules.
-const scheduler = new BookingScheduler()
-const calendar = new HolidayCalendar(new Date().getFullYear())
-
-// Configure opening hours for weekdays.
-const weekdays = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday'
-]
-
-for (const day of weekdays) {
-  scheduler.setOpeningHours(day, '09:00', '17:00')
-}
+// Initialize the booking model.
+const bookingModel = new BookingModel()
 
 // Create an interface for terminal input.
 const rl = createInterface({ input, output })
@@ -58,6 +43,10 @@ async function main() {
         viewBookings()
         break
 
+      case '3':
+        await cancelBooking()
+        break
+
       case '0':
         running = false
         console.log('Goodbye!')
@@ -80,22 +69,7 @@ async function createBooking() {
   const duration = Number(await rl.question('Enter duration (minutes): '))
 
   try {
-    // Check whether the date is a Swedish workday.
-    const year = Number(date.slice(0, 4))
-    const holidayCalendar = year === new Date().getFullYear()
-      ? calendar
-      : new HolidayCalendar(year)
-
-    if (!holidayCalendar.isWorkday(date)) {
-      console.log('Bookings are only allowed on Swedish workdays.')
-      return
-    }
-
-    // Create the booking using BookingScheduler.
-    scheduler.addBooking(date, startTime, duration)
-
-    const bookings = scheduler.getBookings()
-    const booking = bookings[bookings.length - 1]
+    const booking = bookingModel.createBooking(date, startTime, duration)
 
     console.log(`Booking created successfully! ID: ${booking.id}`)
   } catch (error) {
@@ -107,7 +81,7 @@ async function createBooking() {
  * Displays all existing bookings.
  */
 function viewBookings() {
-  const bookings = scheduler.getBookings()
+  const bookings = bookingModel.getBookings()
 
   if (bookings.length === 0) {
     console.log('No bookings found.')
@@ -122,6 +96,23 @@ function viewBookings() {
     console.log(`Start time: ${booking.startTime}`)
     console.log(`Duration: ${booking.duration} minutes`)
     console.log('------------------------')
+  }
+}
+
+async function cancelBooking() {
+  const id = Number(await rl.question('Enter booking ID: '))
+
+  if (!Number.isInteger(id) || id <= 0) {
+    console.log('Invalid booking ID.')
+    return
+  }
+
+  const cancelled = bookingModel.cancelBooking(id)
+
+  if (cancelled) {
+    console.log(`Booking ${id} cancelled successfully!`)
+  } else {
+    console.log(`Booking ${id} was not found.`)
   }
 }
 
