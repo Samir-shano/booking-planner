@@ -63,3 +63,14 @@ test('should cancel an existing booking', () => {
   assert.equal(cancelled, true)
   assert.equal(model.getBookings().length, 0)
 })
+
+/**
+ * Tests that cancelling a non-existing booking returns false.
+ */
+test('should return false when cancelling a non-existing booking', () => {
+  const model = new BookingModel()
+
+  const cancelled = model.cancelBooking(999)
+
+  assert.equal(cancelled, false)
+})
