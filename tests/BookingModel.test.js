@@ -16,3 +16,19 @@ test('should create a booking on a Swedish workday', () => {
   assert.equal(booking.duration, 60)
   assert.equal(model.getBookings().length, 1)
 })
+
+/**
+ * Tests that bookings are rejected on weekends.
+ */
+test('should reject bookings on weekends', () => {
+  const model = new BookingModel()
+
+  assert.throws(
+    () => model.createBooking('2026-10-25', '10:00', 60),
+    {
+      message: 'Bookings are only allowed on Swedish workdays.'
+    }
+  )
+
+  assert.equal(model.getBookings().length, 0)
+})
