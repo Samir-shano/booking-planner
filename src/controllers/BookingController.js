@@ -86,6 +86,10 @@ export class BookingController {
             await this.viewAvailableSlots()
             break
 
+          case '6':
+            await this.checkWorkday()
+            break
+
           case '0':
             running = false
             this.view.showMessage('Goodbye!')
@@ -162,4 +166,25 @@ export class BookingController {
       this.view.showMessage(`Failed to get available slots: ${error.message}`)
     }
   }
+
+
+  /**
+   * Checks whether a selected date is a Swedish workday.
+   */
+  async checkWorkday() {
+    const date = await this.view.ask('Enter date (YYYY-MM-DD): ')
+
+    try {
+      const isWorkday = this.model.isWorkday(date)
+
+      if (isWorkday) {
+        this.view.showMessage(`${date} is a Swedish workday.`)
+      } else {
+        this.view.showMessage(`${date} is not a Swedish workday.`)
+      }
+    } catch (error) {
+      this.view.showMessage(`Failed to check workday: ${error.message}`)
+    }
+  }
+
 } 
