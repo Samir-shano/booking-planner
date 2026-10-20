@@ -48,3 +48,18 @@ test('should reject bookings on Swedish public holidays', () => {
 
   assert.equal(model.getBookings().length, 0)
 })
+
+
+/**
+ * Tests that an existing booking can be cancelled.
+ */
+test('should cancel an existing booking', () => {
+  const model = new BookingModel()
+
+  const booking = model.createBooking('2026-10-20', '10:00', 60)
+
+  const cancelled = model.cancelBooking(booking.id)
+
+  assert.equal(cancelled, true)
+  assert.equal(model.getBookings().length, 0)
+})
