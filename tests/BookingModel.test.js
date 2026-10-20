@@ -124,3 +124,23 @@ test('should reject rescheduling to a weekend', () => {
   assert.equal(originalBooking.date, '2026-10-20')
   assert.equal(originalBooking.startTime, '10:00')
 })
+
+/**
+ * Tests that available booking slots are returned on a workday.
+ */
+test('should return available slots on a Swedish workday', () => {
+  const model = new BookingModel()
+
+  const slots = model.getAvailableSlots('2026-10-20', 60)
+
+  assert.deepEqual(slots, [
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00'
+  ])
+})
