@@ -98,3 +98,29 @@ test('should reschedule an existing booking', () => {
   assert.equal(updatedBooking.startTime, '13:00')
   assert.equal(updatedBooking.duration, 60)
 })
+
+/**
+ * Tests that rescheduling to a weekend is rejected.
+ */
+test('should reject rescheduling to a weekend', () => {
+  const model = new BookingModel()
+
+  const booking = model.createBooking('2026-10-20', '10:00', 60)
+
+  assert.throws(
+    () => model.rescheduleBooking(
+      booking.id,
+      '2026-10-25',
+      '13:00',
+      60
+    ),
+    {
+      message: 'Bookings are only allowed on Swedish workdays.'
+    }
+  )
+
+  const originalBooking = model.getBookings()[0]
+
+  assert.equal(originalBooking.date, '2026-10-20')
+  assert.equal(originalBooking.startTime, '10:00')
+})
