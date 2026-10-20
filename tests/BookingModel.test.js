@@ -74,3 +74,27 @@ test('should return false when cancelling a non-existing booking', () => {
 
   assert.equal(cancelled, false)
 })
+
+/**
+ * Tests that an existing booking can be rescheduled.
+ */
+test('should reschedule an existing booking', () => {
+  const model = new BookingModel()
+
+  const booking = model.createBooking('2026-10-20', '10:00', 60)
+
+  const rescheduled = model.rescheduleBooking(
+    booking.id,
+    '2026-10-21',
+    '13:00',
+    60
+  )
+
+  assert.equal(rescheduled, true)
+
+  const updatedBooking = model.getBookings()[0]
+
+  assert.equal(updatedBooking.date, '2026-10-21')
+  assert.equal(updatedBooking.startTime, '13:00')
+  assert.equal(updatedBooking.duration, 60)
+})
