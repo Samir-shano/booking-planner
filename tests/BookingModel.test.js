@@ -144,3 +144,14 @@ test('should return available slots on a Swedish workday', () => {
     '16:00'
   ])
 })
+
+/**
+* Tests that no booking slots are returned on weekends.
+*/
+test('should return no available slots on weekends', () => {
+  const model = new BookingModel()
+
+  const slots = model.getAvailableSlots('2026-10-25', 60)
+
+  assert.deepEqual(slots, [])
+})
