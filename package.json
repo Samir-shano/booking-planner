@@ -4,7 +4,8 @@
   "description": "A Node.js booking application using Booking Scheduler and Holiday Calendar modules.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "test": "node --test tests/*.test.js"
   },
   "repository": {
     "type": "git",
